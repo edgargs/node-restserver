@@ -12,8 +12,9 @@ app.use(bodyParser.json());
 app.use( require('./routes/usuario') );
 
 //Connect Mongo
-mongoose.connect('mongodb+srv://cluster0-d0dpp.mongodb.net/node-db?retryWrites=true',{
+mongoose.connect(process.env.URLDB,{
     useNewUrlParser: true,
+    useCreateIndex: true,
     user: 'node-user',
     pass: 'C1b3rt3c@081'
   }, (err, res) => {
