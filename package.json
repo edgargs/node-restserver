@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serverWin": "%NODEJS_HOME%\\node.exe server\\server.js"
+    "serverWin": "set MONGO_PASS=C1b3rt3c@081&& %NODEJS_HOME%\\node.exe server\\server.js"
   },
   "author": "",
   "license": "ISC",

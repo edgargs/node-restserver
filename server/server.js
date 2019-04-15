@@ -16,7 +16,7 @@ mongoose.connect(process.env.URLDB,{
     useNewUrlParser: true,
     useCreateIndex: true,
     user: 'node-user',
-    pass: 'C1b3rt3c@081'
+    pass: process.env.MONGO_PASS
   }, (err, res) => {
     if(err) throw err;
 
