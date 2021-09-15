@@ -20,4 +20,5 @@ alter table usuario
 add constraint pk_usuario primary key (id);
 
 insert into usuario(nombre, email, password, role, estado)
-values('Edgar', 'edgar@rios.navarro', '$2b$10$izRTDzRFqioUzbxyNFsBM.2lyZD1rY6nXJtyYrxP7snfOZMgwONdu', 'ADMIN_ROLE' true);
+values('Edgar', 'edgar@rios.navarro', '$2b$10$izRTDzRFqioUzbxyNFsBM.2lyZD1rY6nXJtyYrxP7snfOZMgwONdu', 'ADMIN_ROLE', true);
+commit;

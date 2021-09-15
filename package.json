@@ -14,8 +14,6 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.5.0",
-    "mongoose-unique-validator": "^2.0.2",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.6.5",
@@ -23,7 +21,6 @@
   },
   "devDependencies": {
     "jasmine": "^3.9.0",
-    "node-fetch": "^3.0.0",
     "supertest": "^6.1.6"
   }
 }
