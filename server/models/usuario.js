@@ -1,52 +1,38 @@
-const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
+const { DataTypes } = require('sequelize');
+const { db } = require('../db/connection');
 
-let Schema = mongoose.Schema;
-let rolesValidos = {
-    values: ['ADMIN_ROLE','USER_ROLE'],
-    message: '{VALUE} no es un rol valido'
-};
-
-let usuarioSchema = new Schema({
+const Usuario = db.define('Usuario', {
+    // Model attributes are defined here
     nombre: {
-        type: String,
-        required: [true, 'Nombre necesario']
+      type: DataTypes.STRING,
+      allowNull: false
     },
     email: {
-        type: String,
-        unique: true,
-        required: [true, 'Correo necesario']
+      type: DataTypes.STRING
+      // allowNull defaults to true
     },
     password: {
-        type: String,
-        required: true
+        type: DataTypes.STRING
     },
     img: {
-        type: String
+        type: DataTypes.STRING
     },
     role: {
-        type: String,
-        default: 'USER_ROLE',
-        enum: rolesValidos
+        type: DataTypes.STRING,
+        defaultValue: 'USER_ROLE'
     },
     estado: {
-        type: Boolean,
-        default: true
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
     },
     google: {
-        type: Boolean,
-        default: false
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
-});
+  }, {
+    // Other model options go here
+    tableName: 'usuario'
+  });
 
-usuarioSchema.methods.toJSON = function() {
-    let user = this;
-    let userObject = user.toObject();
-    delete userObject.password;
 
-    return userObject;
-}
-
-usuarioSchema.plugin(uniqueValidator);
-
-module.exports = mongoose.model('Usuario',usuarioSchema)
+module.exports = Usuario

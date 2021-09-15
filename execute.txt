@@ -1,0 +1,20 @@
+
+docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres
+
+
+#LOGIN
+TOKEN=$(curl -H "Content-type: application/json" -d '{"email":"edgar@rios.navarro", "password":"123456"}' http://localhost:3000/login | jq -r '.token')
+
+
+curl -X POST -H "Content-type: application/json" -H "token: ${TOKEN}" -d '{"nombre":"Belen","email":"belen@rios.badajuz", "password":"123456"}' http://localhost:3000/usuario
+
+curl -X PUT -H "Content-type: application/json" -H "token: ${TOKEN}" -d '{"img":"Belencita.jpg"}' http://localhost:3000/usuario/2
+
+
+curl -X POST -H "Content-type: application/json" -H "token: ${TOKEN}" -d '{"nombre":"Carmen","email":"carmen@navarro.rojas", "password":"123456"}' http://localhost:3000/usuario
+
+curl -X DELETE -H "token: ${TOKEN}" http://localhost:3000/usuario/3
+
+
+#GET
+curl -H 'Accept: application/json' -H "token: ${TOKEN}" "http://localhost:3000/usuario?desde=0&limite=10" 

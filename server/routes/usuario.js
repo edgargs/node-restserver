@@ -6,41 +6,46 @@ const Usuario = require('../models/usuario');
 
 const app = express();
 
-app.get('/usuario', verificaToken, function(req, res){
+app.get('/usuario', verificaToken, async function(req, res){
     
     let desde = req.query.desde || 0;
     desde = Number(desde);
-    let limite = req.query.limite || 0;
+    let limite = req.query.limite || 1000;
     limite = Number(limite);
 
     let estadoActivo = {
         estado: true
     };
 
-    Usuario.find(estadoActivo, 'nombre email')
-        .skip(desde)
-        .limit(limite)
-        .exec( (err,usuarios) => {
-            if(err) {
-                return res.status(400).json({
-                    ok: false,
-                    err
-                });
-            }
-
-            Usuario.countDocuments(estadoActivo, (err,cuantos) => {
-                res.json({
-                    ok: true,
-                    usuarios,
-                    cuantos
-                });
-
-            });
+    try {
+        
+        const usuarios = await Usuario.findAll({
+            attributes: ['nombre', 'email'],
+            where: estadoActivo,
+            offset: desde,
+            limit: limite
         });
+
+        const cuantos = await Usuario.count({
+            where: estadoActivo
+        });
+
+        return res.json({
+                ok: true,
+                usuarios,
+                cuantos
+            });
+    } catch (err) {
+        return res.status(400).json({
+            ok: false,
+            err
+        });
+    }
 });
 
-app.post('/usuario', [verificaToken,verificaAdminRole], function(req, res){
+app.post('/usuario', [verificaToken,verificaAdminRole], async function(req, res){
     let body = req.body;
+    console.log(body);
 
     let usuario = new Usuario({
         nombre: body.nombre,
@@ -49,53 +54,63 @@ app.post('/usuario', [verificaToken,verificaAdminRole], function(req, res){
         role: body.role
     });
 
-    usuario.save( (err, usuarioDB) => {
-        if(err) {
-            return res.status(400).json({
-                ok: false,
-                err
-            });
-        }
+    try {
 
+        const usuarioDB = await usuario.save();
+        
         res.json({
             ok: true,
             usuario: usuarioDB
         });
-    });
+        
+    } catch (err) {
+        return res.status(400).json({
+            ok: false,
+            err
+        });
+    }
+    
 
 });
 
-app.put('/usuario/:id', [verificaToken,verificaAdminRole], function(req, res){
+app.put('/usuario/:id', [verificaToken,verificaAdminRole], async function(req, res){
     let id = req.params.id;
     let body = _.pick(req.body,['nombre','email','img','role','estado']);
 
-    Usuario.findByIdAndUpdate(id,body,{new: true, runValidators: true},(err,usuarioDB)=>{
-        if(err) {
-            return res.status(400).json({
-                ok: false,
-                err
-            });
-        }
+    try {
+        const usuarioDB = await Usuario.update(
+            body,
+            {where: {
+                id
+            }}
+        );
 
         res.json({
             ok: true,
             usuario: usuarioDB
         });
-    });
+    
+    } catch (err) {
+        return res.status(400).json({
+            ok: false,
+            err
+        });
+    }
 });
 
-app.delete('/usuario/:id', [verificaToken,verificaAdminRole], function(req,res){
+app.delete('/usuario/:id', [verificaToken,verificaAdminRole], async function(req,res){
 
     let id = req.params.id;
 
-    //Usuario.findByIdAndRemove(id,(err, usuarioBorrado)=>{
-    Usuario.findByIdAndUpdate(id,{estado: false},(err, usuarioBorrado)=>{
-        if(err){
-            return res.status(400).json({
-                ok: false,
-                err
-            });
-        }
+    try {
+        
+        //Delete logico
+        const usuarioBorrado = await Usuario.update(
+            {estado: false},
+            {where: {
+                id
+            }}
+        );
 
         if(!usuarioBorrado){
             return res.status(400).json({
@@ -108,7 +123,12 @@ app.delete('/usuario/:id', [verificaToken,verificaAdminRole], function(req,res){
             ok: true,
             usuario: usuarioBorrado
         });
-    });
+    } catch (err) {
+        return res.status(400).json({
+            ok: false,
+            err
+        });
+    }
 });
 
 module.exports = app;

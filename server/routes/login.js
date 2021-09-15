@@ -6,29 +6,27 @@ const Usuario = require('../models/usuario');
 
 const app = express();
 
-app.post('/login', (req,res)=>{
+app.post('/login', async (req,res)=>{
 
     let body = req.body;
 
-    Usuario.findOne({email: body.email}, (err,usuarioDB) => {
-        if(err){
-            return res.status(500).json({
-                ok: false,
-                err
+    try {
+        
+        const usuarioDB = await Usuario.findOne({
+            where: {email: body.email}
+        });
+        
+        if(!usuarioDB){
+            return res.status(400).json({
+                ok: false
             });
         }
 
-        if(!usuarioDB){
-            return res.status(400).json({
-                ok: false,
-                err
-            });
-        }
+        console.log(bcrypt.hashSync(body.password,10));
 
         if (!bcrypt.compareSync(body.password, usuarioDB.password)){
             return res.status(402).json({
-                ok: false,
-                err
+                ok: false
             });
         }
 
@@ -41,7 +39,13 @@ app.post('/login', (req,res)=>{
             usuario: usuarioDB,
             token: token
         });
-    })
+
+    } catch (err) {
+        return res.status(500).json({
+            ok: false,
+            err
+        });
+    }
 
 });
 
