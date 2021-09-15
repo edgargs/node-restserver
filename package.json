@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jasmine",
     "serverWin": "set MONGO_PASS=C1b3rt3c@081&& %NODEJS_HOME%\\node.exe server\\server.js"
   },
   "author": "",
@@ -20,5 +20,10 @@
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.6.5",
     "underscore": "^1.9.1"
+  },
+  "devDependencies": {
+    "jasmine": "^3.9.0",
+    "node-fetch": "^3.0.0",
+    "supertest": "^6.1.6"
   }
 }

@@ -18,3 +18,8 @@ curl -X DELETE -H "token: ${TOKEN}" http://localhost:3000/usuario/3
 
 #GET
 curl -H 'Accept: application/json' -H "token: ${TOKEN}" "http://localhost:3000/usuario?desde=0&limite=10" 
+
+
+#Testing
+https://blog.stoplight.io/mock-api-test
+https://x-team.com/blog/testing-node-jasmine/
